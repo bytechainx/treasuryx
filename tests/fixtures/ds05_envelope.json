@@ -1,0 +1,18 @@
+{
+  "_synthetic": true,
+  "_note": "本文件为特性 005 自拟的合成样本，不是真实源数据，不构成任何证据。",
+  "_dataset": "DS05",
+  "data": [
+    {
+      "record_date": "2026-08-18",
+      "debt_held_public_amt": 29000000000000.0,
+      "intragov_hold_amt": 7500000000000.0,
+      "tot_pub_debt_out_amt": 36500000000000.0
+    }
+  ],
+  "meta": {
+    "count": 1,
+    "total-count": 1,
+    "total-pages": 1
+  }
+}
