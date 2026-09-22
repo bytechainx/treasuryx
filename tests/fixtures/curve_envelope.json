@@ -1,0 +1,17 @@
+{
+  "_synthetic": true,
+  "_note": "本文件为特性 005 自拟的合成样本，不是真实源数据，不构成任何证据。",
+  "_dataset": "DS06",
+  "data": [
+    {
+      "record_date": "2026-08-18",
+      "tenor": "10Y",
+      "par_yield": 4.21
+    }
+  ],
+  "meta": {
+    "count": 1,
+    "total-count": 1,
+    "total-pages": 1
+  }
+}

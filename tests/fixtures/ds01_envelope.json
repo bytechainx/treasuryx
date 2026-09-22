@@ -1,0 +1,24 @@
+{
+  "_synthetic": true,
+  "_note": "本文件为特性 005 自拟的合成样本，不是真实源数据，不构成任何证据。",
+  "_dataset": "DS01",
+  "data": [
+    {
+      "record_date": "2026-08-18",
+      "account_type": "Federal Reserve Account",
+      "open_today_bal": "830000",
+      "close_today_bal": "825500"
+    },
+    {
+      "record_date": "2026-08-18",
+      "account_type": "Operating Cash Balance",
+      "open_today_bal": null,
+      "close_today_bal": "780000"
+    }
+  ],
+  "meta": {
+    "count": 2,
+    "total-count": "16538",
+    "total-pages": 166
+  }
+}
