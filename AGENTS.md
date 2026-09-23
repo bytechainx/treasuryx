@@ -92,9 +92,10 @@ node scripts/verify-e2e-coverage.mjs treasuryx \
   impl 方法**一律带模块段**（`pub fn treasuryx::value::Date::new(…)`、`impl treasuryx::value::Date`），
   只有门面 `pub use` 再导出的项才是 crate 根形态。核对器在 `pub mod` 形态上曾**同时漏项与造幽灵**，
   且**双向 diff 恒绿**（两侧都由它自己派生）⇒ **跑之前先确认取到的是已修该形态（F4）的核对器版本**
-- **口径边界（**不得**当成「已覆盖全部公开接口」）**：
-  - **枚举的结构体变体字段**（**两级嵌套**，如 `TreasuryAuthorization::Authorized::scope` /
-    `TreasuryAuthorization::Denied::reason`）**不在**提取口径内 ⇒ 应写「**未登记，故三层判据不保护**」，
+- **口径边界（不得当成「已覆盖全部公开接口」）**：
+  - **枚举的结构体变体字段**（**两级嵌套**，本仓实测 **7 个**：`Period::{Month::year, Month::month,
+    Quarter::year, Quarter::quarter, Event::date}` 与 `TreasuryAuthorization::{Authorized::scope,
+    Denied::reason}`）**不在**提取口径内 ⇒ 应写「**未登记，故三层判据不保护**」，
     **不得**写「未覆盖」—— 这些字段在行为上确实被测到（构造 / 穷尽解构 / 真读其值），只是不在权威
     公开面的提取子集里；删字段或改名时核对器**不报**，只能靠**编译失败**兜底。这是核对器的**全局口径
     下界**，不是 `treasuryx` 一个仓的问题
