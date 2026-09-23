@@ -48,3 +48,10 @@ panic = "deny"
 unreachable = "deny"
 todo = "deny"
 unimplemented = "deny"
+
+[package.metadata.bytechainx]
+module_id = "treasuryx"
+owner = "bytechainx"
+role = "data_source"
+production_decision = "NO-GO"
+semantic_contract = "docs/标准.md"
