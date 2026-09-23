@@ -1234,12 +1234,44 @@ fn phase_authz() {
         ));
         assert!(reason.contains("签署者"), "实际：{reason}");
 
+        // 空 scope 在新行为（0.1.1）下走「范围不在白名单」分支，理由不再含「覆盖范围」字样。
         let blank_scope = TreasuryAuthorizationEvidence::new(DECISION_ID, "ZoneCNH", blank);
         let reason = expect_denied(authorize_treasury(
             TreasuryScope::OfflineFixtureOnly,
             Some(&blank_scope),
         ));
-        assert!(reason.contains("覆盖范围"), "实际：{reason}");
+        assert!(reason.contains("范围"), "实际：{reason}");
+    }
+
+    // —— 范围**逐字**匹配（0.1.1 行为）：白名单 = {offline_fixture_only, treasury_offline} ——
+    // 非白名单值、带前后空白者、后缀变体一律拒绝（trim 已不再是放行条件）。
+    for mismatched in [
+        "unknown",
+        "unrelated_source_only",
+        "domain_yahoo_release",
+        " offline_fixture_only ",
+        "treasury_offline-extra",
+    ] {
+        let out_of_scope = TreasuryAuthorizationEvidence::new(DECISION_ID, "ZoneCNH", mismatched);
+        let reason = expect_denied(authorize_treasury(
+            TreasuryScope::OfflineFixtureOnly,
+            Some(&out_of_scope),
+        ));
+        assert!(
+            reason.contains("范围"),
+            "{mismatched:?} 必须因范围不匹配被拒，实际：{reason}"
+        );
+    }
+    // 白名单内的两个范围都必须授权（`treasury_offline` 为既有离线证据别名）。
+    for accepted in ["offline_fixture_only", "treasury_offline"] {
+        let ok_scope = TreasuryAuthorizationEvidence::new(DECISION_ID, "ZoneCNH", accepted);
+        assert!(
+            matches!(
+                authorize_treasury(TreasuryScope::OfflineFixtureOnly, Some(&ok_scope)),
+                TreasuryAuthorization::Authorized { .. }
+            ),
+            "{accepted} 必须授权"
+        );
     }
 
     // LiveCollection：即便证据有效也一律拒绝。

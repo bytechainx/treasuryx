@@ -139,6 +139,10 @@ pub fn validate_record(record: &TreasuryRecord) -> TreasuryResult<()> {
             record.dataset_id.id()
         )));
     }
+    if let Period::Day(date) = record.period {
+        crate::value::Date::new(date.year, date.month, date.day)?;
+    }
+
     if record.frequency != record.dataset_id.frequency() {
         return Err(TreasuryError::Invalid(format!(
             "频率与数据集不符：{}",
@@ -327,5 +331,51 @@ mod tests {
             None
         );
         assert!(TreasuryAmount::Missing(TreasuryMissingReason::SourceOmitted).is_missing());
+    }
+
+    #[test]
+    fn validation_rechecks_public_period_dates() {
+        for date in [
+            Date {
+                year: 2026,
+                month: 2,
+                day: 30,
+            },
+            Date {
+                year: 2026,
+                month: 0,
+                day: 1,
+            },
+            Date {
+                year: 2026,
+                month: 12,
+                day: 0,
+            },
+        ] {
+            let mut value = ds01_record();
+            value.period = Period::Day(date);
+            assert!(validate_record(&value).is_err());
+        }
+        for period in [
+            Period::Month {
+                year: 2026,
+                month: 2,
+            },
+            Period::Quarter {
+                year: 2026,
+                quarter: 1,
+            },
+            Period::Year(2026),
+            Period::Event {
+                date: Date::new(2026, 2, 1).unwrap(),
+            },
+        ] {
+            let mut value = ds01_record();
+            value.period = period;
+            assert!(validate_record(&value).is_err());
+        }
+        let mut value = ds01_record();
+        value.period = Period::Day(Date::new(2024, 2, 29).unwrap());
+        assert!(validate_record(&value).is_ok());
     }
 }

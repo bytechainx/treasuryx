@@ -69,6 +69,9 @@ pub enum TreasuryAuthorization {
 
 /// fail-closed 的授权判定。
 ///
+/// 范围逐字匹配：`offline_fixture_only` 来自 Owner 签核的 product_boundary，
+/// `treasury_offline` 为既有离线证据别名；其他源范围和带前后空白者不接受。
+///
 /// 证据缺失、决策 ID 空白、签署者空白或覆盖范围空白 → **一律** `Denied`；
 /// 请求 `LiveCollection` → **一律** `Denied`（须另批决策 ID + B2–B8 门禁）。
 /// MUST NOT 默认放行。
@@ -100,9 +103,12 @@ pub fn authorize_treasury(
             reason: "证据缺少签署者（签署者不明）".into(),
         };
     }
-    if evidence.scope.trim().is_empty() {
+    if !matches!(
+        evidence.scope.as_str(),
+        "offline_fixture_only" | "treasury_offline"
+    ) {
         return TreasuryAuthorization::Denied {
-            reason: "证据未声明覆盖范围（覆盖范围不明）".into(),
+            reason: "证据范围未覆盖本次离线请求（范围未知或不匹配）".into(),
         };
     }
     TreasuryAuthorization::Authorized {
@@ -184,5 +190,31 @@ mod tests {
         assert_eq!(DECISION_ID, "TREASURY-B1-2026-08-20-OFFLINE");
         assert_eq!(SUPERSEDED_DECISION_ID, "TREASURY-PROD-2026-08-17-approve");
         assert!(!LIVE_PREAUTH_CHANNEL.is_empty());
+    }
+
+    #[test]
+    fn authorization_checks_scope_coverage() {
+        for scope in [
+            "unknown",
+            "unrelated_source_only",
+            "live_only",
+            " offline_fixture_only ",
+            " domain_yahoo_release",
+            "domain_yahoo_release ",
+            "treasury_offline-extra",
+        ] {
+            let e = TreasuryAuthorizationEvidence::new(DECISION_ID, "ZoneCNH", scope);
+            assert!(matches!(
+                authorize_treasury(TreasuryScope::OfflineFixtureOnly, Some(&e)),
+                TreasuryAuthorization::Denied { .. }
+            ));
+        }
+        for scope in ["offline_fixture_only", "treasury_offline"] {
+            let e = TreasuryAuthorizationEvidence::new(DECISION_ID, "ZoneCNH", scope);
+            assert!(matches!(
+                authorize_treasury(TreasuryScope::OfflineFixtureOnly, Some(&e)),
+                TreasuryAuthorization::Authorized { .. }
+            ));
+        }
     }
 }
