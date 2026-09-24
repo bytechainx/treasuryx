@@ -69,6 +69,42 @@ grep -rn 'https\?://' src || echo "0 端点字面量"
 grep -rnE 'env::var|from_env' src || echo "0 凭据"
 ```
 
+## E2E 全公开面覆盖核对（手工，**不进 CI**）
+
+除四件套外，本仓有一条**公开面覆盖**核对：`tests/e2e_treasury.rs` 必须把本仓**核对器口径内的全部公开条目**
+逐条真实执行一遍。核对器在**元仓库根目录**执行：
+
+```bash
+cd /home/workspace/bytechainx
+node scripts/verify-e2e-coverage.mjs treasuryx \
+  --target-dir /home/workspace/bytechainx/.cargo/e2e-cov/treasuryx
+```
+
+- 退出码：**0** 全过 / **1** 有发现（含未覆盖）/ **2** 工具自身或环境错误（缺工具时**一律 2**，不降级成「通过」）
+- 三层判据，缺一不可：① 权威公开面由 `cargo +nightly public-api --simplified` 派生（**不采信测试自述**）；
+  ② 测试内 `E2E_MANIFEST`（`const E2E_MANIFEST: &[(&str, &str)]`）与权威公开面**双向 diff**
+  （少一条 = missing、多一条 = ghost，都判红）；③ `-C instrument-coverage` + `cargo-llvm-cov` **按函数**
+  取执行次数，每条公开 `fn` 的 count 必须 > 0
+- **本仓权威条数（独立复算，谓词 = `cargo +nightly public-api --simplified` + 核对器提取口径）**：
+  **156** 条 = `type` 24 / `variant` 65 / `field` 23 / `const` 13 / `fn` 31
+- **为何本仓特别需要它**：`treasuryx` 是**公开模块**（`pub mod`）形态的仓 —— `src/lib.rs` 有 5 个
+  `pub mod`（`authz` / `error` / `parse` / `pit` / `value`）；`cargo public-api` 对这类仓的定义行与固有
+  impl 方法**一律带模块段**（`pub fn treasuryx::value::Date::new(…)`、`impl treasuryx::value::Date`），
+  只有门面 `pub use` 再导出的项才是 crate 根形态。核对器在 `pub mod` 形态上曾**同时漏项与造幽灵**，
+  且**双向 diff 恒绿**（两侧都由它自己派生）⇒ **跑之前先确认取到的是已修该形态（F4）的核对器版本**
+- **口径边界（不得当成「已覆盖全部公开接口」）**：
+  - **枚举的结构体变体字段**（**两级嵌套**，本仓实测 **7 个**：`Period::{Month::year, Month::month,
+    Quarter::year, Quarter::quarter, Event::date}` 与 `TreasuryAuthorization::{Authorized::scope,
+    Denied::reason}`）**不在**提取口径内 ⇒ 应写「**未登记，故三层判据不保护**」，
+    **不得**写「未覆盖」—— 这些字段在行为上确实被测到（构造 / 穷尽解构 / 真读其值），只是不在权威
+    公开面的提取子集里；删字段或改名时核对器**不报**，只能靠**编译失败**兜底。这是核对器的**全局口径
+    下界**，不是 `treasuryx` 一个仓的问题
+  - **元组结构体的公开字段是单级**（在口径内、**必须**登记），与本条的两级嵌套不同
+  - derive / auto impl 不计入（`clone` / `eq` / `fmt` / `serialize` …）⇒ 口径实为「公开**条目**（子集）」，
+    故正确表述是「已覆盖**核对器口径内的**全部公开条目（156 条）」
+- 另需外部工具 `cargo +nightly public-api` / `cargo-llvm-cov` / `rustfilt`；口径与判定细节（含 F1–F4
+  四类假绿）见元仓库 `scripts/AGENTS.md` §2.1.1
+
 ## 三类测试
 
 | 文件 | 头部标记 | 要求 |

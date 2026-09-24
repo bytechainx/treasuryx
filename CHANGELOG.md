@@ -5,6 +5,13 @@
 
 ## [Unreleased]
 
+### 新增
+
+- 新增 E2E target `tests/e2e_treasury.rs`：把本仓**核对器口径内的全部公开条目**逐条真实执行
+  （权威公开面派生自 `cargo +nightly public-api --simplified`，共 **156 条** = `type` 24 /
+  `variant` 65 / `field` 23 / `const` 13 / `fn` 31）。**纯测试新增，不改公开 API、不升版本**；
+  核对口径见 `AGENTS.md`「E2E 全公开面覆盖核对」与元仓库 `scripts/AGENTS.md` §2.1.1。
+
 ## [0.1.1] - 2026-09-23
 
 ### 修正
