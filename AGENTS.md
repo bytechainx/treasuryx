@@ -8,7 +8,7 @@
 写入主权守卫、NY Fed `NO-GO` 守卫、记录值对象与信封解析、fail-closed 授权判定。
 **不实现联网采集或 live**，不实现派生指标，不做单位换算，不成为应用的组合根。
 
-采集范围权威：`specs/adapter/treasury.md`；跨源语义权威：`contracts/cross-source-routing.md`。
+采集范围权威：工作区根 `specs/adapter/treasury.md`；跨源语义权威：工作区根 `specs/features/005-macro-data-source-crates/contracts/cross-source-routing.md`。
 
 ## 技术栈
 
