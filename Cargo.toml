@@ -2,7 +2,7 @@
 name = "treasuryx"
 version = "0.1.1"
 edition = "2021"
-rust-version = "1.71"
+rust-version = "1.77"
 description = "美国财政部源事实的离线类型层：数据集常量、曲线路由与写入主权守卫、fail-closed 授权判定"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/bytechainx/treasuryx"

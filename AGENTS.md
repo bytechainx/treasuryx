@@ -12,7 +12,7 @@
 
 ## 技术栈
 
-- Rust edition 2021, rust-version 1.71（= 依赖图 `rust_version` 最大值，推导见 `CONTEXT.md`）
+- Rust edition 2021, rust-version 1.77（= 依赖图 `rust_version` 最大值，推导见 `CONTEXT.md`）
 - 关键依赖：`thiserror` 2、`serde` 1（`derive`）、`serde_json` 1
 - 无 path 依赖；不依赖任何 `bytechainx/*` crate
 - crate 级 lint：`unwrap_used` / `expect_used` / `panic` / `unreachable` / `todo` / `unimplemented`
