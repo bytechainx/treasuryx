@@ -45,7 +45,7 @@ cargo package --no-verify
 ## 开发约定
 
 - 注释、文档、错误消息使用**简体中文**；标识符保持英文。
-- MSRV 为 Rust 1.71、edition 2021；不得使用高于该下界的语言特性或 std API。
+- MSRV 为 Rust 1.77、edition 2021；不得使用高于该下界的语言特性或 std API。
 - 错误模型：`TreasuryError`（thiserror 风格枚举）+ `#[non_exhaustive]` +
   `TreasuryErrorKind`；禁止公共 API 返回 `String` / `anyhow::Error`。
 - 不在库代码里裸 `unwrap()` / `expect()` / `panic!` / `println!`

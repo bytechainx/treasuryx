@@ -84,12 +84,12 @@ _Avoid_: 夹具数据（容易被误读为真实样本）
 
 | 依赖 | 版本 | 其 `rust_version` |
 | --- | --- | --- |
-| `thiserror` | 2.0.20 | 1.71 |
-| `thiserror-impl` | 2.0.20 | 1.71 |
+| `thiserror` | 2.0.21 | 1.77 |
+| `thiserror-impl` | 2.0.21 | 1.77 |
 | `serde` | 1.0.229 | 1.56 |
 | `serde_core` | 1.0.229 | 1.56 |
 | `serde_derive` | 1.0.229 | 1.71 |
-| `serde_json` | 1.0.151 | 1.71 |
+| `serde_json` | 1.0.154 | 1.71 |
 | `proc-macro2` | 1.0.107 | 1.71 |
 | `quote` | 1.0.47 | 1.71 |
 | `syn` | 3.0.6 | 1.71 |
@@ -98,5 +98,5 @@ _Avoid_: 夹具数据（容易被误读为真实样本）
 | `memchr` | 2.8.3 | 1.61 |
 | `zmij` | 1.0.23 | 1.71 |
 
-**最大值 = `1.71`**，故本 crate 声明 `rust-version = "1.71"`。
+**最大值 = `1.77`**（`thiserror` / `thiserror-impl` 2.0.21），故本 crate 声明 `rust-version = "1.77"`（2026-11-16 复核）。
 无依赖缺失 `rust_version` 的情形，无需保守取值。
