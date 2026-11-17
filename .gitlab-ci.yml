@@ -1,7 +1,13 @@
-# GitLab CI — treasuryx
-# 由 scripts/gitlab-ci-gen.mjs 生成；判定语义见各仓 .github/workflows/ 正本。
-stages:
-  - test
+# GitLab CI — treasuryx（特性 034：中央模板接入）
+# fmt/clippy/test/doc 与数据侧占位 由 xhyperium/workspace 模板 governance-v1.0.3 提供；
+# 其余 job 保留本仓自有定义。模板版本 pin tag，升级走 MR 改 ref。
+include:
+  - project: "xhyperium/workspace"
+    ref: "governance-v1.0.3"
+    file:
+      - "/.gitlab/ci/templates/governance.yml"
+      - "/.gitlab/ci/templates/rust.yml"
+      - "/.gitlab/ci/templates/data-module.yml"
 
 workflow:
   rules:
@@ -21,14 +27,6 @@ variables:
     key: "$CI_COMMIT_REF_SLUG"
     paths:
       - .cargo/
-
-gate:
-  extends: .rust
-  stage: test
-  script:
-    - cargo fmt --check
-    - cargo clippy --all-targets -- -D warnings
-    - cargo test
 
 msrv:
   extends: .rust
