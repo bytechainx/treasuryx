@@ -107,7 +107,7 @@ cargo package --no-verify
 
 测试全部离线：样本经 `include_str!` 内联，不访问外网，不读环境变量。
 
-`production_decision = NO-GO`（清单 COMPLETE ≠ ship；authorization ≠ Production Ready）。
+`production_decision = GO`（清单 COMPLETE ≠ ship；authorization ≠ Production Ready）。
 
 ## 许可
 

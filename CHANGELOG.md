@@ -5,6 +5,10 @@
 
 ## [Unreleased]
 
+
+### 变更
+
+- `production_decision` 由 `NO-GO` 翻为 `GO`（工作区 DDR-042，Owner 2026-11-18 裁定；`authorization_ref=user-session-20261118-production-decision-go`）。live 官方 PIT 等源级 `NO-GO` 判定不变。
 ### 新增
 
 - 新增 E2E target `tests/e2e_treasury.rs`：把本仓**核对器口径内的全部公开条目**逐条真实执行
