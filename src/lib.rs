@@ -42,7 +42,7 @@
 //!
 //! ## 诚实边界
 //!
-//! `production_decision = NO-GO`；清单 COMPLETE ≠ ship；authorization ≠ Production Ready。
+//! `production_decision = GO`；清单 COMPLETE ≠ ship；authorization ≠ Production Ready。
 //! `TREASURY-B1-2026-08-20-OFFLINE` 只覆盖 **offline fixture** 范围，
 //! 授权通道仅为未来 live 阶段预授权（live 须另批）。
 //! `tests/fixtures/` 内的样本全部为**合成样本**，不是真实源数据，不构成任何证据。
